@@ -1,19 +1,47 @@
 aid: knotch
-name: knotch
-description: knotch is a company surfaced as a portfolio company of slow-ventures and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/knotch.png
+name: Knotch
+description: >-
+  Knotch is a New York-based content intelligence company founded by Anda Gansca and Aron Tzimas.
+  Its Knotch One platform measures and optimizes owned-content performance for enterprise marketing
+  teams, and its newer product, Ace, is positioned as AI experience infrastructure for the
+  conversational web: it ingests a brand's existing web properties, content hubs, video and feeds,
+  atomizes them into modular content units tagged by topic, audience, funnel stage and intent, then
+  composes adaptive page experiences for human visitors while emitting structured, citable content
+  for AI agents and answer engines. Named enterprise customers include Google, Deloitte, Ally,
+  Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX and Chime. As of July 2026 Knotch
+  publishes no public developer portal, API documentation, machine-readable specification, SDK or
+  package registry presence; access is sales-led.
 url: https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - slow-ventures
 x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier-reason: no-public-api-surface
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
+- Content Intelligence
+- Content Marketing
+- Analytics
+- Artificial Intelligence
+- Personalization
+- Marketing Technology
+- Agentic Web
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -22,4 +50,18 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
+  url: https://knotch.com/
+- type: Website
+  name: knotch.it
   url: https://knotch.it
+- type: PrivacyPolicy
+  url: https://knotch.com/legal/privacy-policy
+- type: DomainSecurity
+  url: security/knotch-domain-security.yml
+- type: LLMsTxt
+  url: llms/knotch-llms.txt
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
