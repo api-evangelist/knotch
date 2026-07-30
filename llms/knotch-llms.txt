@@ -1,0 +1,41 @@
+# Knotch
+
+> Knotch is a New York–based content intelligence company. Its Knotch One platform measures
+> and optimizes owned-content performance for enterprise marketing teams, and its newer product,
+> Ace, is positioned as "AI experience infrastructure for the conversational web" — ingesting a
+> brand's existing web properties, atomizing them into modular content units tagged by topic,
+> audience, funnel stage and intent, then composing adaptive page experiences for human visitors
+> while emitting structured, citable content for AI agents and answer engines.
+
+## Status
+
+Knotch publishes no public developer surface as of 2026-07-19. There is no developer portal,
+no API documentation, no OpenAPI/AsyncAPI specification, no SDK or package on any public
+registry, no CLI, no public GitHub organization, no status page, no changelog, and no
+/.well-known/ discovery documents. Access to Knotch One and Ace appears to be sales-led
+("Get Demo"). This file is generated from the API Evangelist catalog entry, not harvested
+from a Knotch-published llms.txt.
+
+## Products
+
+- [Ace](https://knotch.com/products/ace): AI experience infrastructure for the conversational web — adaptive page composition for humans, structured content for AI agents.
+- [Knotch One](https://knotch.com/products/knotch): Content intelligence and optimization platform.
+
+## Company
+
+- [Website](https://knotch.com/): Knotch home.
+- [Company](https://knotch.com/explore/company): Founded by Anda Gansca (CEO) and Aron Tzimas (CPO); leadership and board.
+- [Customers](https://knotch.com/customers): Named enterprise customers including Google, Deloitte, Ally, Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX and Chime.
+- [Proof](https://knotch.com/customers/proof): Customer outcomes.
+- [Resources](https://knotch.com/explore/resources): Content hub.
+- [Careers](https://knotch.com/explore/careers): Open roles.
+
+## Legal
+
+- [Privacy Policy](https://knotch.com/legal/privacy-policy)
+
+## API Evangelist
+
+- [APIs.json](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/apis.yml): This provider's machine-readable catalog entry.
+- [Domain security probe](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/security/knotch-domain-security.yml): TLS/HSTS/DNSSEC/CAA/SPF/DMARC posture.
+- [Well-known probe](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/well-known/knotch-well-known.yml): Result of probing the /.well-known/ discovery surface.

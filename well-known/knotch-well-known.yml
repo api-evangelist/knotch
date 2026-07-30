@@ -1,0 +1,39 @@
+generated: '2026-07-19'
+method: searched
+source: live probe of the Knotch web hosts
+note: >-
+  No /.well-known/ discovery surface is published on either Knotch host. Every
+  probed path returned 404. Recorded as negative evidence; no WellKnown or
+  SecurityTxt pointer is wired in apis.yml because nothing was found.
+hosts:
+- host: https://www.knotch.it
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://knotch.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+adjacent_probes:
+- path: /llms.txt
+  status: 404
+- path: /robots.txt
+  status: 404
+- path: /sitemap.xml
+  status: 404
