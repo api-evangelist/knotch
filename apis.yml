@@ -1,15 +1,23 @@
 aid: knotch
 accessModel:
-  pricing: unknown
-  onboarding: unknown
+  pricing: contact-sales
+  onboarding: sales-led
   trial: false
   try_now: false
   public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  label: Sales-led with public documentation
+  confidence: medium
+  source:
+  - https://docs.knotch.it/
+  - https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  generated: '2026-08-13'
+  method: searched
+  note: >-
+    Documentation, the OpenAPI and the client-side tag APIs are public and anonymous, but
+    credentials are not self-service: the Events API states "To obtain or rotate an API key,
+    contact your Knotch Client Success Manager", the Event Pixel requires a Measurement Account
+    ID from Client Success, and the Verification Pixel requires a kvpid issued via
+    blueprint@knotch.com. No pricing page and no self-service signup are published.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/knotch.png
 name: Knotch
 description: >-
@@ -20,19 +28,27 @@ description: >-
   atomizes them into modular content units tagged by topic, audience, funnel stage and intent, then
   composes adaptive page experiences for human visitors while emitting structured, citable content
   for AI agents and answer engines. Named enterprise customers include Google, Deloitte, Ally,
-  Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX and Chime. As of July 2026 Knotch
-  publishes no public developer portal, API documentation, machine-readable specification, SDK or
-  package registry presence; access is sales-led.
+  Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX and Chime. Knotch does publish a
+  developer surface, on two hosts that are not linked from the marketing site: docs.knotch.it
+  documents the browser-side Measurement Unit API, Event Pixel and Verification Pixel, and
+  help.knotch.com documents the server-side Knotch Events API v1.1, which accepts batched
+  conversion events over HTTPS with Bearer authentication and is backed by a live OpenAPI 3.1.0
+  definition served at https://events.knotch.it/openapi.json. Credentials are issued by Client
+  Success rather than self-service, and no pricing, status page, changelog, SDK or public GitHub
+  organization is published.
 url: https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - slow-ventures
-x-tier: stub
-x-tier-reason: no-public-api-surface
+x-tier: profiled
+x-tier-reason: >-
+  Upgraded from stub 2026-08-13: a live OpenAPI 3.1.0 was found at https://events.knotch.it/openapi.json
+  and two public documentation hosts (docs.knotch.it, help.knotch.com) were harvested. The prior
+  "no-public-api-surface" finding was wrong.
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-08-13'
 tags:
 - Company
 - Content Intelligence
@@ -42,7 +58,101 @@ tags:
 - Personalization
 - Marketing Technology
 - Agentic Web
-apis: []
+- Conversion Tracking
+- Attribution
+- Event Ingestion
+- Web Analytics
+apis:
+- aid: knotch:events-api
+  name: Knotch Events API
+  description: >-
+    Server-side conversion event ingestion. Accepts batches of up to 100 events over HTTPS with
+    Bearer authentication, so conversions that happen off-site (CRM milestones such as ClosedWon,
+    BecameSQL or Renewal, data-warehouse or marketing-automation outcomes) can be measured and
+    attributed alongside on-site conversions in Knotch One, where they surface as "API Conversions".
+    A simulate=true query parameter validates a payload without storing data. A Segment Webhook
+    destination endpoint is also supported and is the only path present in the published OpenAPI.
+  humanURL: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  baseURL: https://events.knotch.it
+  tags:
+  - Events
+  - Conversions
+  - Attribution
+  properties:
+  - type: OpenAPI
+    url: openapi/knotch-events-api-openapi.yml
+  - type: Documentation
+    url: https://help.knotch.com/en/collections/22-events-api
+  - type: APIReference
+    url: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  - type: Authentication
+    url: authentication/knotch-authentication.yml
+  - type: Conventions
+    url: conventions/knotch-conventions.yml
+  - type: Idempotency
+    url: conventions/knotch-conventions.yml
+  - type: ErrorCatalog
+    url: errors/knotch-problem-types.yml
+  - type: DataModel
+    url: data-model/knotch-data-model.yml
+  - type: Sandbox
+    url: sandbox/knotch-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/knotch-rate-limits.yml
+  - type: Overlay
+    url: overlays/knotch-events-api-overlay.yaml
+- aid: knotch:unit-api
+  name: Knotch Measurement Unit API
+  description: >-
+    Browser-side JavaScript API exposed by the Knotch tag for controlling Measurement Units on a
+    page at runtime: Knotch.addUnit(), Knotch.removeUnit(), Knotch.setFocus(), Knotch.enableUnit(),
+    Knotch.disableUnit() and Knotch.setOptout(). Paired with the knotch-ignore HTML attribute, which
+    holds a placeholder container back from injecting a Unit until the publisher explicitly enables it.
+  humanURL: https://docs.knotch.it/unit_api/
+  baseURL: https://www.knotch-cdn.com
+  tags:
+  - JavaScript
+  - Measurement
+  - Consent
+  properties:
+  - type: Documentation
+    url: https://docs.knotch.it/unit_api/
+  - type: Components
+    url: components/knotch-components.yml
+- aid: knotch:event-pixel
+  name: Knotch Event Pixel
+  description: >-
+    HTTP beacon endpoint for signalling arbitrary events from a web page — conversion events, site
+    journey steps and visitor signals. A single GET to the collection host with account_id, event
+    and optional page_url and ts query parameters, implementable as an inline <img>, a dynamic
+    Image() in JavaScript, or an event-delegated handler.
+  humanURL: https://docs.knotch.it/event_pixel/
+  baseURL: https://t.knotch.it
+  tags:
+  - Pixel
+  - Events
+  - Conversion Tracking
+  properties:
+  - type: Documentation
+    url: https://docs.knotch.it/event_pixel/
+- aid: knotch:verification-pixel
+  name: Knotch Verification Pixel
+  description: >-
+    Publisher traffic verification tag, a component of Knotch Blueprint. A single script element
+    carrying a data-kvpid attribute, fired once on document onLoad, collecting page views, unique
+    visitors and basic browser metrics. Identifiers are first-party cookies and are explicitly not
+    shared with the Knotch Measurement product.
+  humanURL: https://docs.knotch.it/verification_pixel/
+  baseURL: https://www.knotch-cdn.com
+  tags:
+  - Pixel
+  - Verification
+  - Publishers
+  properties:
+  - type: Documentation
+    url: https://docs.knotch.it/verification_pixel/
+  - type: Components
+    url: components/knotch-components.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -54,14 +164,62 @@ common:
 - type: Website
   name: knotch.it
   url: https://knotch.it
+- type: DeveloperPortal
+  url: https://docs.knotch.it/
+- type: Documentation
+  url: https://docs.knotch.it/
+- type: APIReference
+  url: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+- type: GettingStarted
+  url: https://help.knotch.com/en/collections/1-getting-started
+- type: Support
+  url: https://help.knotch.com/
+- type: HelpCenter
+  url: https://help.knotch.com/
 - type: PrivacyPolicy
   url: https://knotch.com/legal/privacy-policy
+- type: OpenAPI
+  url: openapi/knotch-events-api-openapi.yml
+- type: Authentication
+  url: authentication/knotch-authentication.yml
+- type: Conventions
+  url: conventions/knotch-conventions.yml
+- type: Idempotency
+  url: conventions/knotch-conventions.yml
+- type: ErrorCatalog
+  url: errors/knotch-problem-types.yml
+- type: DataModel
+  url: data-model/knotch-data-model.yml
+- type: Conformance
+  url: conformance/knotch-conformance.yml
+- type: Lifecycle
+  url: lifecycle/knotch-lifecycle.yml
+- type: Sandbox
+  url: sandbox/knotch-sandbox.yml
+- type: Components
+  url: components/knotch-components.yml
+- type: Packages
+  url: packages/knotch-packages.yml
+- type: Plans
+  url: plans/knotch-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/knotch-rate-limits.yml
+- type: Overlay
+  url: overlays/knotch-events-api-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: DomainSecurity
   url: security/knotch-domain-security.yml
 - type: LLMsTxt
   url: llms/knotch-llms.txt
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 18
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+  note: >-
+    Contract discovery corrected a wrong prior finding. The 2026-07-19 pass recorded
+    "no-public-api-surface"; a live OpenAPI 3.1.0 was found on the API host root at
+    https://events.knotch.it/openapi.json, and two public documentation hosts (docs.knotch.it,
+    help.knotch.com) were harvested. Neither documentation host is linked from knotch.com, which
+    is why the first pass missed them.
