@@ -1,0 +1,122 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+derived_from:
+- openapi/knotch-events-api-openapi.yml
+- https://docs.knotch.it/event_pixel/
+- https://docs.knotch.it/unit_optout/
+note: >-
+  Cross-cutting request/response semantics for the Knotch Events API, searched from Knotch's own
+  Events API v1.1 technical overview and corroborated against the live OpenAPI 3.1.0 at
+  https://events.knotch.it/openapi.json.
+authentication:
+  style: HTTP Bearer
+  header: 'Authorization: Bearer <api-key>'
+  transport: HTTPS required for all requests
+  detail: authentication/knotch-authentication.yml
+idempotency:
+  supported: true
+  mechanism: client-supplied event identifier, not a request-scoped idempotency key
+  key_field: event_id
+  key_location: request body, per event (events[].event.event_id)
+  key_required: true
+  scope: per event within an account; identity is also considered when available
+  duplicate_response:
+    status: 409
+    meaning: Conflict — the event was already ingested
+  documented_as: >-
+    "Deduplication is performed by event_id (and identity when available). Duplicate events return
+    HTTP 409 Conflict."
+  segment_variant:
+    key_field: messageId
+    detail: >-
+      For the Segment webhook endpoint, deduplication uses Segment's messageId when present.
+      Segment retries failed posts with exponential backoff, which is the reason the dedup
+      contract exists on this path.
+  retention: not documented — Knotch does not publish how long a deduplication window is held
+  caveat: >-
+    This is event-level deduplication rather than a generic Idempotency-Key header. A retried
+    batch is safe because each event carries its own required identifier, but there is no way to
+    replay a whole request and receive the original response body.
+  source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+batching:
+  supported: true
+  envelope: '{"events": [...]}'
+  max_items: 100
+  min_items: 1
+  note: >-
+    Requests are always batched — even a single event is sent inside the events array. Exceeding
+    100 events in one request is a documented validation failure.
+pagination:
+  supported: false
+  note: The API is write-only ingestion; there is no list or read operation to paginate.
+filtering_and_expansion:
+  supported: false
+  note: No sparse fieldsets, field expansion, or include parameters are documented.
+versioning:
+  scheme: documentation-versioned
+  current: v1.1
+  in_url: false
+  in_header: false
+  detail: >-
+    The API is versioned in the title of its documentation ("Events API v1.1 Technical Overview")
+    rather than in the URL path, a header, or a date parameter. The endpoint path carries no
+    version segment. The published OpenAPI reports info.version 0.1.0, which does not agree with
+    the documented v1.1 — the spec version appears to be a framework default that was never set.
+  history:
+    - v1.0 — earlier article slug, now 307-redirected to the v1.1 article
+    - v1.1 — current
+  source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+error_envelope:
+  documented_shape: >-
+    Knotch publishes a response-code table (200/400/403/422/500/502/503/504) plus a 409 for
+    duplicates. The only machine-readable error body in the OpenAPI is FastAPI's
+    HTTPValidationError, returned on 422.
+  problem_json: false
+  rfc9457: false
+  validation_error_schema: HTTPValidationError -> detail[] of ValidationError {loc, msg, type, input, ctx}
+  detail: errors/knotch-problem-types.yml
+success_envelope:
+  status: 200
+  simulate_body: '{"message": "Events validated successfully"}'
+  note: >-
+    The live-mode 200 response is declared in the OpenAPI as an empty schema, so its body shape is
+    not published. Only the simulate=true response body is documented.
+rate_limit_signaling:
+  headers_published: false
+  note: >-
+    No X-RateLimit-* / RateLimit-* / Retry-After headers and no 429 are documented. The only
+    published throughput constraint is the 100-events-per-request batch cap.
+  detail: rate-limits/knotch-rate-limits.yml
+request_tracing:
+  request_id_header: not documented
+  correlation: >-
+    The client-supplied event_id is the only identifier that can be used to correlate a submitted
+    event with what later appears in Knotch One.
+testing:
+  mode_parameter: simulate
+  detail: sandbox/knotch-sandbox.yml
+timestamps:
+  format: UTC Unix epoch seconds, integer
+  field: events[].event.timestamp
+  example_documented: 1729538400
+currency:
+  field: events[].value.value
+  type: float
+  assumed_currency: USD
+  note: >-
+    Knotch's Event Builder documentation states currency is assumed to be USD and the aggregation
+    operator is sum; there is no currency field in the payload.
+consent:
+  mechanism: Knotch.setOptout(true|false) plus a knotch_optout cookie on the publisher domain
+  defaults: >-
+    Visitors are opted in by default except in EU countries, where opt-out defaults to true.
+  cookie_domain: .knotch.it
+  source: https://docs.knotch.it/unit_optout/
+cross_links:
+  authentication: authentication/knotch-authentication.yml
+  errors: errors/knotch-problem-types.yml
+  lifecycle: lifecycle/knotch-lifecycle.yml
+  rate_limits: rate-limits/knotch-rate-limits.yml
+  sandbox: sandbox/knotch-sandbox.yml
+  data_model: data-model/knotch-data-model.yml

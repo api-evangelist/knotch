@@ -1,0 +1,126 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Knotch Events API
+  version: 1.0.0
+extends: openapi/_original/knotch-events-api-openapi-original.json
+x-generated: '2026-08-13'
+x-method: generated
+x-source: >-
+  Enhancements applied to the verbatim spec harvested from https://events.knotch.it/openapi.json
+  on 2026-08-13. Every value below comes either from the host the spec was served from or from
+  Knotch's own Events API v1.1 technical overview at
+  https://help.knotch.com/en/articles/159-events-api-v11-technical-overview. Nothing is invented.
+actions:
+- target: $.info
+  description: >-
+    Name the API after the product Knotch documents. The published spec is titled "Custom Events
+    API" with the framework's stock description, which does not match the product name Knotch
+    uses in its own documentation ("Knotch Events API").
+  update:
+    title: Knotch Events API
+    description: >-
+      Knotch Events API — send server-side conversion events from CRMs, data warehouses, or
+      analytics tools directly into Knotch, where they are measured and attributed alongside Site
+      Conversions in Knotch One.
+    x-apievangelist-documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+    x-apievangelist-documented-version: '1.1'
+    x-apievangelist-version-disagreement: >-
+      info.version in the published spec is 0.1.0, a framework default. Knotch documents this API
+      as v1.1.
+- target: $
+  description: >-
+    Add the servers block the published spec omits entirely. The host is the one the spec is
+    served from and is also the base URL Knotch names in its own documentation.
+  update:
+    servers:
+    - url: https://events.knotch.it
+      description: Knotch Events API production host
+- target: $.components.securitySchemes.HTTPBearer
+  description: Document how the bearer credential is obtained, per Knotch's documentation.
+  update:
+    description: >-
+      Knotch API key presented as an HTTP Bearer token. All requests must be sent over HTTPS.
+      To obtain or rotate an API key, contact your Knotch Client Success Manager. There is no
+      self-service key issuance.
+- target: $.paths['/conversion_events/segment/{account_id}'].post
+  description: >-
+    Replace the stock FastAPI summary ("Get Events", on a POST that ingests events) and record
+    the batch, deduplication and error semantics Knotch documents in prose but omits from the spec.
+  update:
+    summary: Ingest conversion events from a Segment webhook
+    description: >-
+      Segment webhook destination endpoint. Accepts a batch of 1-100 conversion events. Segment
+      destinations send an Authorization Bearer header plus an X-Signature HMAC over the first
+      event in each batch, which Knotch validates. Deduplication uses Segment's messageId when
+      present, otherwise event_id.
+    x-apievangelist-max-batch-size: 100
+    x-apievangelist-min-batch-size: 1
+    x-apievangelist-idempotency:
+      key_field: event_id
+      alternate_key_field: messageId
+      duplicate_status: 409
+      note: Retries are safe; duplicates return 409 Conflict rather than double-counting.
+    x-apievangelist-undocumented-responses:
+      note: >-
+        Knotch's response-code table documents 400, 403, 409, 500, 502, 503 and 504 for this API.
+        None are declared in the published spec, which carries only 200 and 422.
+      statuses: [400, 403, 409, 500, 502, 503, 504]
+- target: $.paths['/conversion_events/segment/{account_id}'].post.parameters[?(@.name=='simulate')]
+  description: Document the simulation mode, which is the only test facility Knotch offers.
+  update:
+    description: >-
+      When true, validates payload structure, required fields and authentication without storing
+      any data, returning 200 with {"message": "Events validated successfully"}. Defaults to
+      false, which ingests live data.
+- target: $.paths['/conversion_events/segment/{account_id}'].post.parameters[?(@.name=='account_id')]
+  update:
+    description: Knotch Measurement Account ID that scopes the batch to a tenant.
+- target: $.paths['/health'].get
+  update:
+    tags: [operations]
+    summary: Health check
+    description: Unauthenticated liveness probe for the Knotch Events API host.
+- target: $.components.schemas.EventData.properties.event_id
+  update:
+    description: >-
+      Unique identifier for the event. This is the deduplication key — resubmitting an event with
+      the same event_id returns 409 Conflict.
+- target: $.components.schemas.EventData.properties.timestamp
+  update:
+    description: UTC Unix timestamp in seconds.
+- target: $.components.schemas.EventData.properties.event_name
+  update:
+    description: >-
+      Name of the event, e.g. FormSubmitted or ClosedWon. Must match the event_name of a saved API
+      Conversion definition in Knotch One Event Builder for the event to be attributed.
+- target: $.components.schemas.Identity
+  update:
+    description: >-
+      Identity resolution keys. Every field is optional in the schema, but Knotch's documentation
+      requires at least one identity to be present, and states that only a single custom ID is
+      currently supported — it must be the ID agreed before integration.
+- target: $.components.schemas.Value.properties.value
+  update:
+    description: >-
+      Revenue or numeric value associated with the event. Aggregated with sum in Knotch One;
+      currency is assumed to be USD and is not carried in the payload.
+- target: $.components.schemas.CustomEvents.properties.events
+  update:
+    description: List of events. Minimum 1, maximum 100 unique events per request.
+    minItems: 1
+    maxItems: 100
+- target: $.info
+  description: >-
+    Record the surface Knotch documents but does not include in the machine-readable contract.
+  update:
+    x-apievangelist-undocumented-operations:
+    - method: post
+      path: /conversion_events/{account_id}
+      name: Direct API endpoint
+      description: >-
+        Knotch's documentation and its cURL example both name a direct ingestion endpoint,
+        POST https://events.knotch.it/conversion_events/{account_id}?simulate=false, with the same
+        payload and auth as the Segment path. It is absent from the published OpenAPI, which
+        exposes only the /segment/ variant. Recorded here rather than added to the spec, because
+        it was not verified against a live response.
+      source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview

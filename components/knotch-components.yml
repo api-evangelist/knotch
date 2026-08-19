@@ -1,0 +1,133 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.knotch.it/
+note: >-
+  Knotch's primary developer surface is client-side. Everything below is a browser-embeddable
+  component or tag documented at docs.knotch.it and distributed from Knotch's own CDN
+  (www.knotch-cdn.com). These are distinct from server-side SDKs — Knotch ships none; see
+  packages/knotch-packages.yml.
+loaders:
+- name: Knotch tag (unminified)
+  url: https://www.knotch-cdn.com/unit/latest/knotch.js
+  status: 200
+  bytes: 271237
+  pinned: false
+  note: 'the "latest" path segment floats; no versioned URL is documented'
+- name: Knotch tag (minified)
+  url: https://www.knotch-cdn.com/unit/latest/knotch.min.js
+  status: 200
+  bytes: 154241
+  pinned: false
+- name: Verification Pixel
+  url: https://www.knotch-cdn.com/verification-pixel/latest/vpixel.js
+  status: 200
+  bytes: 13100
+  pinned: false
+families:
+- name: Measurement Unit
+  docs: https://docs.knotch.it/unit/
+  description: >-
+    A question-based sentiment tool embedded at the end of an article or video. Combines
+    qualitative survey response with passive page analytics.
+  variants:
+  - name: Feedback Unit
+    renders: true
+    captures: [Time to Interact, Sentiment Based Response]
+  - name: Invisible Unit
+    renders: false
+    captures:
+    - Page and Unique Views
+    - Time on Page
+    - Time Playing Video
+    - Referrer Source
+    - Device and Browser Type
+    - Page Scroll Depth
+    - Visitor Geolocation
+    - Third Party Demographic Insights
+  integration_methods:
+  - name: iframe
+    detail: >-
+      Rendered in a nested browsing context. More isolated, but constrains Knotch from measuring
+      scroll depth, referrers and viewability.
+  - name: JavaScript tag
+    detail: >-
+      Script in the page head plus a placeholder element where the Unit should appear. Rendered
+      in the page context, enabling the full measurement data set.
+  - name: video attribute
+    detail: 'add the data-Knotch attribute to an existing <video> element; the Unit appears when playback ends'
+  placeholder:
+    element: div
+    class: 'knotch_<unitId>'
+    attribute: 'knotch-ignore'
+    attribute_detail: >-
+      Holds the container back from injecting a Unit on page load until the publisher explicitly
+      enables it via Knotch.addUnit() or Knotch.setFocus().
+  authoring_tool:
+    name: Unit Generator
+    note: >-
+      Knotch documents a Unit Generator that produces the embed code; it sits inside the
+      authenticated product, not on the public docs host.
+- name: Runtime control API
+  docs: https://docs.knotch.it/unit_api/
+  description: >-
+    The global Knotch object the tag installs, for adding, removing, focusing, enabling and
+    disabling Units at runtime.
+  methods:
+  - {name: 'Knotch.addUnit(unitId)', parameter: 'id (String, required)', effect: 'removes knotch-ignore from the matching container and injects the Unit'}
+  - {name: 'Knotch.removeUnit(unitId)', parameter: 'id (String, required)', effect: 'un-injects the Unit and re-adds knotch-ignore to the placeholder'}
+  - {name: 'Knotch.setFocus(unitId)', parameter: 'id (String, required)', effect: 'adds the named Unit and removes all other Units on the page'}
+  - {name: 'Knotch.enableUnit(unitId)', parameter: 'id (String, required)', effect: 're-displays a hidden Unit and resumes tracking where it left off'}
+  - {name: 'Knotch.disableUnit(unitId)', parameter: 'id (String, required)', effect: 'hides the Unit and pauses all data collection'}
+  - {name: 'Knotch.setOptout(boolean)', parameter: 'true to opt out, false to opt in', effect: 'sets an opt-out cookie on the .knotch.it domain, preventing tracking cookies'}
+- name: Consent / opt-out
+  docs: https://docs.knotch.it/unit_optout/
+  description: >-
+    Visitor opt-out controls. Visitors are opted in by default except in EU countries, where
+    opt-out defaults to true.
+  mechanisms:
+  - {kind: javascript, detail: 'Knotch.setOptout(true) / Knotch.setOptout(false)'}
+  - kind: cookie
+    detail: >-
+      Set knotch_optout=0 on the publisher domain to request an opt-out for pages that do not
+      carry the Knotch script. On the next page that does carry it, Knotch calls setOptout(true)
+      and rewrites the cookie to knotch_optout=1 to mark the opt-out complete. Setting
+      knotch_optout=0 site-wide makes opt-out the default for every visitor.
+  effect_of_optout: >-
+    Only the unique visitors count is affected — it converges toward page views. Time on page,
+    scroll depth, responses and referral sources continue to be collected.
+- name: Event Pixel
+  docs: https://docs.knotch.it/event_pixel/
+  description: >-
+    A single HTTP request to Knotch's collection endpoint that signals an arbitrary named event.
+    Used for conversion events, site journey tracking and visitor signalling.
+  endpoint: https://t.knotch.it/receive/beacon.gif
+  parameters:
+  - {name: account_id, required: true, note: Measurement Account ID, issued by Client Success}
+  - {name: event, required: true, note: 'arbitrary event name, at least one character, no documented length limit'}
+  - {name: page_url, required: false, note: 'recommended to set to the canonical page URL; available in Event Pixel reporting'}
+  - {name: ts, required: false, note: 'client timestamp, Date.now()'}
+  implementation_patterns:
+  - {name: inline image, detail: 'an <img> element fires the event once at page load'}
+  - {name: dynamic JavaScript, detail: 'new Image() on DOMContentLoaded, with a <noscript> <img> fallback'}
+  - {name: interactive, detail: 'invoked from click/submit handlers, including via event delegation, for multi-step and conversion tracking'}
+- name: Verification Pixel
+  docs: https://docs.knotch.it/verification_pixel/
+  description: >-
+    Publisher traffic verification, a component of Knotch Blueprint. Provides an independent view
+    of a publisher's overall traffic and triggers Knotch's third-party demographic provider.
+  element: script
+  src: https://www.knotch-cdn.com/verification-pixel/latest/vpixel.js
+  required_attribute: data-kvpid
+  placement: 'within <head> or near the end of <body>'
+  credential: 'unique kvpid per verified publisher, requested via blueprint@knotch.com'
+  collects: [page views, unique visitors, basic browser metrics]
+  timing: 'a single request fired on the document onLoad event'
+  isolation: >-
+    Knotch explicitly does not share visitor identifiers between the Measurement product and the
+    Verification Pixel. Verification Pixel identifiers are stored as first-party cookies, so
+    Knotch cannot track visitors across domains via this pixel.
+gaps:
+- Every CDN path is unpinned ("latest"); no versioned URL and no SRI hash is documented, so a
+  publisher cannot pin or verify the script they embed.
+- The components are not published to npm or any other registry, so there is no dependency-managed
+  install path and no changelog for the tag.

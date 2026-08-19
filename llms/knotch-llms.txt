@@ -1,31 +1,91 @@
 # Knotch
 
-> Knotch is a New York–based content intelligence company. Its Knotch One platform measures
-> and optimizes owned-content performance for enterprise marketing teams, and its newer product,
-> Ace, is positioned as "AI experience infrastructure for the conversational web" — ingesting a
-> brand's existing web properties, atomizing them into modular content units tagged by topic,
-> audience, funnel stage and intent, then composing adaptive page experiences for human visitors
-> while emitting structured, citable content for AI agents and answer engines.
+> Knotch is a New York-based content intelligence company. Its Knotch One platform measures and
+> optimizes owned-content performance for enterprise marketing teams, and its newer product, Ace,
+> is positioned as "AI experience infrastructure for the conversational web" — ingesting a brand's
+> existing web properties, atomizing them into modular content units tagged by topic, audience,
+> funnel stage and intent, then composing adaptive page experiences for human visitors while
+> emitting structured, citable content for AI agents and answer engines.
 
 ## Status
 
-Knotch publishes no public developer surface as of 2026-07-19. There is no developer portal,
-no API documentation, no OpenAPI/AsyncAPI specification, no SDK or package on any public
-registry, no CLI, no public GitHub organization, no status page, no changelog, and no
-/.well-known/ discovery documents. Access to Knotch One and Ace appears to be sales-led
-("Get Demo"). This file is generated from the API Evangelist catalog entry, not harvested
-from a Knotch-published llms.txt.
+Knotch publishes a real developer surface, on two documentation hosts that are not linked from the
+marketing site. Corrected 2026-08-13: an earlier version of this file said Knotch had no public
+API. That was wrong.
+
+- A server-side REST API, the **Knotch Events API v1.1**, backed by a live OpenAPI 3.1.0 served at
+  https://events.knotch.it/openapi.json, with interactive docs at /docs and /redoc.
+- Browser-side APIs — the Measurement Unit API, the Event Pixel and the Verification Pixel —
+  documented at docs.knotch.it.
+
+Access is sales-led. Documentation is public and anonymous, but credentials are not self-service:
+Events API keys come from a Knotch Client Success Manager, Event Pixel Account IDs from the Client
+Success team, and Verification Pixel kvpids from blueprint@knotch.com. There is no pricing page,
+no self-service signup, no status page, no changelog, no SDK on any package registry, no CLI, no
+public GitHub organization, no MCP server, no A2A agent card, and no /.well-known/ document on any
+host.
+
+This file is generated from the API Evangelist catalog entry and the artifacts in this repo, not
+harvested from a Knotch-published llms.txt — Knotch does not publish one.
+
+## APIs
+
+- [Knotch Events API](https://help.knotch.com/en/articles/159-events-api-v11-technical-overview):
+  Server-side conversion event ingestion. `POST https://events.knotch.it/conversion_events/{account_id}`
+  (and a Segment webhook variant at `/conversion_events/segment/{account_id}`). Bearer auth,
+  batches of 1-100 events, `simulate=true` validates without storing. Deduplicated on a
+  client-supplied `event_id`; duplicates return 409 Conflict.
+- [Knotch Measurement Unit API](https://docs.knotch.it/unit_api/): Browser JavaScript API —
+  `Knotch.addUnit()`, `removeUnit()`, `setFocus()`, `enableUnit()`, `disableUnit()`,
+  `setOptout()` — plus the `knotch-ignore` HTML attribute.
+- [Knotch Event Pixel](https://docs.knotch.it/event_pixel/): HTTP beacon at
+  `https://t.knotch.it/receive/beacon.gif?account_id=&event=&page_url=&ts=` for arbitrary
+  conversion, journey and signal events.
+- [Knotch Verification Pixel](https://docs.knotch.it/verification_pixel/): Publisher traffic
+  verification tag (Knotch Blueprint), a script with a `data-kvpid` attribute.
+
+## Specs
+
+- [Knotch Events API OpenAPI 3.1.0](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/openapi/knotch-events-api-openapi.yml): Refined, with servers[] added.
+- [Original harvested spec](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/openapi/_original/knotch-events-api-openapi-original.json): Verbatim from https://events.knotch.it/openapi.json.
+- [OpenAPI Overlay](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/overlays/knotch-events-api-overlay.yaml): API Evangelist enhancements.
+
+## Docs
+
+- [Developer documentation](https://docs.knotch.it/): Measurement Unit, Unit API, opting out, Event Pixel, Verification Pixel.
+- [Help center](https://help.knotch.com/): 235 articles across Knotch One, analytics, funnels, quadrants, conversions and security.
+- [Events API collection](https://help.knotch.com/en/collections/22-events-api): Technical overview, and creating/managing API Conversion events.
+- [Getting started](https://help.knotch.com/en/collections/1-getting-started)
+- [Security collection](https://help.knotch.com/en/collections/13-security): What data is collected, SSO, retention.
+
+## Artifacts
+
+- [APIs.json](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/apis.yml): This provider's machine-readable catalog entry.
+- [Authentication](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/authentication/knotch-authentication.yml): Bearer plus three non-API-key credential models.
+- [Conventions](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/conventions/knotch-conventions.yml): Idempotency, batching, versioning, error envelope.
+- [Error catalog](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/errors/knotch-problem-types.yml)
+- [Data model](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/data-model/knotch-data-model.yml)
+- [Sandbox](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/sandbox/knotch-sandbox.yml): simulate mode.
+- [Rate limits](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/rate-limits/knotch-rate-limits.yml)
+- [Lifecycle](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/lifecycle/knotch-lifecycle.yml)
+- [Conformance](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/conformance/knotch-conformance.yml)
+- [Components](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/components/knotch-components.yml): The browser tags.
+- [Packages](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/packages/knotch-packages.yml): CDN only; no registry presence.
+- [Plans](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/plans/knotch-plans-pricing.yml): No published pricing.
+- [Well-known probe](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/well-known/knotch-well-known.yml)
+- [Domain security probe](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/security/knotch-domain-security.yml)
+- [Agent skills](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/skills/_index.yml)
 
 ## Products
 
-- [Ace](https://knotch.com/products/ace): AI experience infrastructure for the conversational web — adaptive page composition for humans, structured content for AI agents.
+- [Ace](https://knotch.com/products/ace): AI experience infrastructure for the conversational web.
 - [Knotch One](https://knotch.com/products/knotch): Content intelligence and optimization platform.
 
 ## Company
 
 - [Website](https://knotch.com/): Knotch home.
-- [Company](https://knotch.com/explore/company): Founded by Anda Gansca (CEO) and Aron Tzimas (CPO); leadership and board.
-- [Customers](https://knotch.com/customers): Named enterprise customers including Google, Deloitte, Ally, Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX and Chime.
+- [Company](https://knotch.com/explore/company): Founded by Anda Gansca (CEO) and Aron Tzimas (CPO).
+- [Customers](https://knotch.com/customers): Google, Deloitte, Ally, Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX, Chime.
 - [Proof](https://knotch.com/customers/proof): Customer outcomes.
 - [Resources](https://knotch.com/explore/resources): Content hub.
 - [Careers](https://knotch.com/explore/careers): Open roles.
@@ -33,9 +93,3 @@ from a Knotch-published llms.txt.
 ## Legal
 
 - [Privacy Policy](https://knotch.com/legal/privacy-policy)
-
-## API Evangelist
-
-- [APIs.json](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/apis.yml): This provider's machine-readable catalog entry.
-- [Domain security probe](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/security/knotch-domain-security.yml): TLS/HSTS/DNSSEC/CAA/SPF/DMARC posture.
-- [Well-known probe](https://raw.githubusercontent.com/api-evangelist/knotch/refs/heads/main/well-known/knotch-well-known.yml): Result of probing the /.well-known/ discovery surface.

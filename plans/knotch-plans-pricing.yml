@@ -1,0 +1,29 @@
+generated: '2026-08-13'
+method: searched
+source: https://knotch.com/
+plan_count: 0
+pricing_url: null
+note: >-
+  Knotch publishes no pricing. There is no pricing page, no plan tiers, no free tier and no
+  self-service signup anywhere on knotch.com, docs.knotch.it or help.knotch.com. Go-to-market is
+  enterprise sales-led: every conversion path on the marketing site is a "Get Demo" call to
+  action, and API credentials are issued by a Knotch Client Success Manager rather than purchased.
+  Recorded as an explicit zero with evidence rather than omitted.
+model: contact-sales
+free_tier: false
+trial: false
+self_service_signup: false
+plans: []
+credential_issuance:
+  events_api_key: contact your Knotch Client Success Manager
+  event_pixel_account_id: contact the Client Success team
+  verification_pixel_kvpid: request via blueprint@knotch.com
+  source:
+  - https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  - https://docs.knotch.it/event_pixel/
+  - https://docs.knotch.it/verification_pixel/
+evidence:
+- {url: 'https://knotch.com/pricing', status: 404}
+- {url: 'https://knotch.com/', status: 200, note: 'no pricing link in navigation or footer; primary CTA is Get Demo'}
+- {url: 'https://knotch.com/legal', status: 404}
+checked: '2026-08-13'

@@ -1,39 +1,109 @@
-generated: '2026-07-19'
-method: searched
-source: live probe of the Knotch web hosts
+generated: '2026-08-13'
+method: probed
+source: live probe of every Knotch host, including the API host discovered 2026-08-13
 note: >-
-  No /.well-known/ discovery surface is published on either Knotch host. Every
-  probed path returned 404. Recorded as negative evidence; no WellKnown or
-  SecurityTxt pointer is wired in apis.yml because nothing was found.
+  No /.well-known/ discovery document is served on any Knotch host. Recorded as negative evidence.
+  No WellKnown and no SecurityTxt pointer is wired in apis.yml, because nothing was found.
+  IMPORTANT: docs.knotch.it returns HTTP 200 with an HTML page for EVERY /.well-known/ path,
+  including paths that cannot exist. That is a static-site catch-all, not a served document, and
+  it is recorded below as a miss with the reason. Treating it as a hit would credit Knotch with a
+  discovery surface it does not operate.
 hosts:
-- host: https://www.knotch.it
+- host: https://events.knotch.it
+  role: API host (Knotch Events API)
   documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/ai-plugin.json
-    status: 404
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /llms.txt, status: 404}
+  note: >-
+    Returns a JSON 404 ({"detail":"Not Found"}) rather than an HTML shell, so these are honest
+    negatives. This host DOES serve a real machine-readable contract at /openapi.json (200,
+    OpenAPI 3.1.0) and interactive docs at /docs and /redoc.
 - host: https://knotch.com
+  role: marketing site
   documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/ai-plugin.json
-    status: 404
-adjacent_probes:
-- path: /llms.txt
-  status: 404
-- path: /robots.txt
-  status: 404
-- path: /sitemap.xml
-  status: 404
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /llms.txt, status: 404}
+  - {path: /robots.txt, status: 404}
+  - {path: /sitemap.xml, status: 404}
+- host: https://knotch.it
+  role: legacy marketing host
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /llms.txt, status: 404}
+  - {path: /robots.txt, status: 404}
+  - {path: /sitemap.xml, status: 404}
+- host: https://docs.knotch.it
+  role: developer documentation host
+  catch_all: true
+  documents:
+  - {path: /.well-known/security.txt, status: 200, hit: false, reason: 'HTML shell (text/html) — static-site catch-all, not a document'}
+  - {path: /.well-known/openid-configuration, status: 200, hit: false, reason: 'HTML shell — catch-all'}
+  - {path: /.well-known/oauth-authorization-server, status: 200, hit: false, reason: 'HTML shell — catch-all'}
+  - {path: /.well-known/api-catalog, status: 200, hit: false, reason: 'HTML shell — catch-all'}
+  - {path: /.well-known/ai-plugin.json, status: 200, hit: false, reason: 'HTML shell — catch-all'}
+  - {path: /.well-known/agent-card.json, status: 200, hit: false, reason: 'HTML shell — catch-all; body is not a JSON AgentCard'}
+  - {path: /.well-known/agent.json, status: 200, hit: false, reason: 'HTML shell — catch-all; body is not a JSON AgentCard'}
+  - {path: /llms.txt, status: 200, hit: false, reason: 'HTML shell (text/html) — catch-all, not an llms.txt document'}
+  - {path: /robots.txt, status: 200, hit: true, content: 'User-agent: * / Allow: /'}
+  - {path: /sitemap.xml, status: 200, hit: false, reason: 'HTML shell — catch-all, not XML'}
+- host: https://help.knotch.com
+  role: help centre (Gleap, Next.js)
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /llms.txt, status: 200, hit: false, reason: 'HTML shell (text/html) — SPA catch-all, not an llms.txt document'}
+  - {path: /robots.txt, status: 200, hit: true, content: 'User-Agent: * / Allow: / / Disallow: /cdn-cgi/'}
+  - {path: /sitemap.xml, status: 200, hit: true, content: '235 URLs (application/xml)'}
+- host: https://t.knotch.it
+  role: event collection host
+  documents:
+  - {path: /.well-known/security.txt, status: 401}
+  - {path: /.well-known/agent-card.json, status: 401}
+  - {path: /.well-known/agent.json, status: 401}
+  - {path: /llms.txt, status: 401}
+  note: >-
+    Every path on this host returns 401 with an empty body, including the root. The collection
+    endpoint itself (/receive/beacon.gif) is the only documented surface.
+- host: https://www.knotch-cdn.com
+  role: CDN origin (S3/CloudFront)
+  documents:
+  - {path: /.well-known/security.txt, status: 403}
+  - {path: /.well-known/agent-card.json, status: 403}
+  - {path: /.well-known/agent.json, status: 403}
+  - {path: /llms.txt, status: 403}
+  note: Object-storage origin; returns an S3 AccessDenied XML body for any unknown key.
+summary:
+  well_known_documents_served: 0
+  security_txt: false
+  openid_configuration: false
+  oauth_authorization_server: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false
+  llms_txt_published_by_provider: false
+  pointer_emitted: false
+checked: '2026-08-13'

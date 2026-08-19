@@ -1,0 +1,95 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+derived_from: openapi/knotch-events-api-openapi.yml
+format: none
+rfc9457: false
+note: >-
+  Knotch publishes a response-code table in the Events API v1.1 technical overview. Titles and
+  descriptions below are Knotch's own wording, verbatim from that table; the 409 comes from the
+  Deduplication & Validation section of the same article. Only the 422 has a machine-readable
+  schema in the OpenAPI. Knotch publishes no error type URIs, no application-level error codes,
+  and no problem+json media type, so there is nothing to key an error catalog on beyond HTTP status.
+envelope:
+  media_type: application/json
+  validation_shape: '{"detail": [{"loc": [...], "msg": "...", "type": "...", "input": ..., "ctx": {...}}]}'
+  schema: openapi/knotch-events-api-openapi.yml#/components/schemas/HTTPValidationError
+  note: >-
+    The 422 body is FastAPI's stock validation envelope, exposed as-is. Knotch does not wrap it or
+    add its own error code.
+problems:
+- status: 400
+  title: Bad Request
+  description: Failed due to unknown errors
+  remediation: >-
+    Knotch does not enumerate the causes. Re-check the request against the documented payload
+    schema before escalating to Client Success.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: false
+- status: 403
+  title: Unauthorized
+  description: The API key doesn't have permissions to perform the request
+  remediation: >-
+    Confirm the Authorization Bearer header is present and that the key was issued for the
+    account_id in the path. Keys are obtained and rotated through a Knotch Client Success Manager.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: false
+  note: >-
+    Knotch labels 403 "Unauthorized". This is a naming deviation — 401 is Unauthorized and 403 is
+    Forbidden — and Knotch documents no 401 at all.
+- status: 409
+  title: Conflict
+  description: Duplicate event — an event with this event_id (and identity, when available) was already ingested
+  remediation: >-
+    Expected and safe on retry. Treat as a successful no-op rather than a failure; the event is
+    already recorded. For Segment traffic, deduplication uses messageId when present.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: false
+  relates_to: conventions/knotch-conventions.yml#idempotency
+- status: 422
+  title: Invalid payload
+  description: The request was unacceptable, often due to missing a required parameter
+  schema: openapi/knotch-events-api-openapi.yml#/components/schemas/HTTPValidationError
+  source_operation: openapi/knotch-events-api-openapi.yml#get_events_conversion_events_segment__account_id__post
+  remediation: >-
+    Read detail[].loc to find the offending field path. Required fields are events (1-100 items),
+    event.event_name, event.timestamp, event.event_id and identity.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: true
+- status: 500
+  title: Server Error
+  description: Something went wrong on Knotch's end
+  remediation: Retry with backoff; the event_id deduplication contract makes retries safe.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: false
+- status: 502
+  title: Server Error
+  description: Something went wrong on Knotch's end
+  remediation: Retry with backoff.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: false
+- status: 503
+  title: Server Error
+  description: Something went wrong on Knotch's end
+  remediation: Retry with backoff.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: false
+- status: 504
+  title: Server Error
+  description: Something went wrong on Knotch's end
+  remediation: Retry with backoff.
+  source_documentation: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  in_openapi: false
+validation_rules:
+- rule: at most 100 events per request
+  source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+- rule: at least 1 event per request
+  source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+- rule: at least one identity must be present (e.g. Knotch ID or an external ID)
+  source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+gaps:
+- The published OpenAPI declares only 200 and 422 on the one documented operation. The 400, 403,
+  409 and 5xx classes that Knotch documents in prose are absent from the machine-readable contract.
+- No error type URIs, no stable application error codes, and no application/problem+json.
+- 403 is labelled "Unauthorized" where 401 is meant; no 401 is documented.
+- No 429 is documented, so a client cannot distinguish throttling from a generic 5xx.

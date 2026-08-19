@@ -1,0 +1,72 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  registry queries against npm, PyPI, RubyGems, crates.io and jsDelivr, plus
+  https://docs.knotch.it/ for the CDN distribution paths
+package_count: 3
+official_sdk_count: 0
+note: >-
+  Knotch publishes no client SDK for the Knotch Events API in any language, and has no presence on
+  any package registry. The three first-party artifacts below are browser tags distributed only
+  from Knotch's own CDN, with no registry metadata endpoint to query. No `SDKs` pointer is wired
+  in apis.yml: these are embeddable measurement tags, not client libraries that wrap the REST API,
+  and crediting them as SDKs would overstate what Knotch ships. See
+  components/knotch-components.yml for their runtime surface.
+packages:
+- language: javascript
+  registry: cdn
+  name: knotch.js
+  url: https://www.knotch-cdn.com/unit/latest/knotch.js
+  install: '<script src="https://www.knotch-cdn.com/unit/latest/knotch.js"></script>'
+  official: true
+  version: null
+  published: null
+  size_bytes: 271237
+  http_status: 200
+  note: >-
+    Unpinned. The distribution URL floats to "latest", there is no versioned path documented, no
+    CDN JSON metadata endpoint (this is Knotch's own CloudFront-fronted origin, not npm/unpkg/
+    jsDelivr), and no version string is exposed in the documentation. A consumer embedding this
+    script cannot tell which build they are getting, and neither can we — hence version: null,
+    checked and not found, rather than a guess.
+- language: javascript
+  registry: cdn
+  name: knotch.min.js
+  url: https://www.knotch-cdn.com/unit/latest/knotch.min.js
+  install: '<script src="https://www.knotch-cdn.com/unit/latest/knotch.min.js"></script>'
+  official: true
+  version: null
+  published: null
+  size_bytes: 154241
+  http_status: 200
+  note: Minified build of the same tag; same unpinned "latest" path.
+- language: javascript
+  registry: cdn
+  name: vpixel.js
+  url: https://www.knotch-cdn.com/verification-pixel/latest/vpixel.js
+  install: '<script src="https://www.knotch-cdn.com/verification-pixel/latest/vpixel.js" data-kvpid="<your-kvpid>"></script>'
+  official: true
+  version: null
+  published: null
+  size_bytes: 13100
+  http_status: 200
+  note: >-
+    Knotch Verification Pixel. Unpinned "latest" path, no metadata endpoint, no version exposed.
+    Requires a data-kvpid attribute issued by Knotch.
+registries_checked:
+- {registry: npm, query: 'package knotch', result: 404}
+- {registry: npm, query: 'package @knotch/sdk', result: 404}
+- {registry: npm, query: 'package knotch-sdk', result: 404}
+- {registry: npm, query: 'package @knotch/unit', result: 404}
+- {registry: npm, query: 'search text=knotch', result: '0 results'}
+- {registry: pypi, query: 'project knotch', result: 404}
+- {registry: rubygems, query: 'gem knotch', result: 404}
+- {registry: crates.io, query: 'search knotch', result: '0 results'}
+- {registry: jsdelivr, query: 'packages/npm/knotch', result: 404}
+- {registry: github, query: 'orgs knotch / knotchit / knotch-it', result: 404}
+checked: '2026-08-13'
+gaps:
+- No server-side client library in any language for the Events API; integrators hand-roll HTTP.
+- No package-registry presence at all, so no dependency management, no semver, no release feed.
+- No version pinning or Subresource Integrity available for the browser tags.
+- No public GitHub organization.

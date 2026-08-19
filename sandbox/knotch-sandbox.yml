@@ -1,0 +1,78 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+note: >-
+  Knotch ships a validation-only simulation mode rather than a separate sandbox environment. There
+  is no test host, no test-vs-live key prefix, and no fixture data. Everything below is published
+  by Knotch; no test values have been invented.
+separation:
+  model: same host, same credentials, request-scoped flag
+  test_host: null
+  live_host: https://events.knotch.it
+  key_prefixes: null
+  note: >-
+    The same production API key and the same production endpoint are used for both simulated and
+    live requests. The only thing that separates them is a query parameter, which means a
+    mistyped or omitted flag writes real data.
+simulation:
+  parameter: simulate
+  location: query
+  type: boolean
+  default: false
+  values:
+    'true': validates structure, required fields and authentication without storing any data
+    'false': ingests the batch
+  success_response:
+    status: 200
+    body: '{"message": "Events validated successfully"}'
+  documented_as: >-
+    "You can safely test your integration by setting simulate=true. This validates structure,
+    required fields, and authentication without storing any data."
+  in_openapi: true
+  openapi_parameter: openapi/knotch-events-api-openapi.yml#/paths/~1conversion_events~1segment~1{account_id}/post/parameters/1
+test_fields:
+- name: test_event_code
+  location: events[] item
+  documented_in: the payload schema example in the Events API v1.1 technical overview
+  in_schema: false
+  example_value: TEST123
+  caveat: >-
+    This field appears in Knotch's published example payload but is NOT present in the CustomEvent
+    schema of the live OpenAPI, and Knotch's own field definition table does not describe it. Its
+    behaviour is undocumented. Recorded here because Knotch publishes it, not because it is verified.
+health_check:
+  operation: health_check_health_get
+  method: GET
+  path: /health
+  auth: none
+  use: >-
+    Unauthenticated liveness probe on the production host. Usable to confirm reachability before
+    an integration is credentialed.
+  source: openapi/knotch-events-api-openapi.yml
+published_example_values:
+  note: >-
+    Verbatim from Knotch's own documentation. These are documentation examples, not working
+    credentials, and the account IDs belong to Knotch's example pages.
+  event_names: [ClosedWon, BecameSQL, AdClick, FormSubmitted, PurchaseCompleted, Renewal, SQL]
+  event_id: OPP-12345
+  timestamps: [1720727400, 1729538400, 1724800000, 1724886400]
+  value: 50000.00
+  event_source: [Salesforce, Marketo]
+  event_pixel_account_ids:
+  - '56045b7062ec9c4e0a2b7443'
+  - '5bfc3c686cf0d1e816e72849'
+  event_pixel_event_names: [inline_event, dynamic_page_load_event, interactive_download_event, interactive_contact_event, submit_form]
+live_examples:
+  note: >-
+    Knotch links "live example" pages from each documentation page (Unit API, Event Pixel,
+    Verification Pixel) that demonstrate the integration in a real browser.
+  pages:
+  - https://docs.knotch.it/unit_api/
+  - https://docs.knotch.it/event_pixel/
+  - https://docs.knotch.it/verification_pixel/
+gaps:
+- No sandbox environment, no test host, no test API key, no test account.
+- No test-mode key prefix, so a key cannot be identified as test or live by inspection.
+- No time simulation, no event triggers, no seeded fixture data.
+- simulate defaults to false, so an omitted parameter writes production data.
+- The Event Pixel and Verification Pixel have no simulation mode at all.

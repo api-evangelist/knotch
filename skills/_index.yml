@@ -1,0 +1,36 @@
+generated: '2026-08-13'
+method: generated
+source: >-
+  Generated from openapi/knotch-events-api-openapi.yml, conventions/knotch-conventions.yml,
+  errors/knotch-problem-types.yml and components/knotch-components.yml. Every operationId and
+  every JavaScript method named in these skills was verified against Knotch's published contract
+  or documentation.
+skills:
+- file: knotch-send-conversion-events.md
+  name: Send conversion events to Knotch
+  description: >-
+    Batch and submit server-side conversion events to the Knotch Events API, validate with
+    simulate mode first, and handle the event_id deduplication contract.
+  api: openapi/knotch-events-api-openapi.yml
+  operations:
+  - get_events_conversion_events_segment__account_id__post
+  - health_check_health_get
+- file: knotch-instrument-measurement-unit.md
+  name: Instrument a page with the Knotch Measurement Unit
+  description: >-
+    Embed the Knotch tag, control Measurement Units at runtime with the browser-side Unit API,
+    and honour visitor opt-out.
+  api: components/knotch-components.yml
+  operations:
+  - Knotch.addUnit
+  - Knotch.removeUnit
+  - Knotch.setFocus
+  - Knotch.enableUnit
+  - Knotch.disableUnit
+  - Knotch.setOptout
+provider_published_skills:
+  found: false
+  checked:
+  - {url: 'https://knotch.com/AGENTS.md', status: 404}
+  - {url: 'https://docs.knotch.it/llms.txt', status: 200, note: 'HTML shell, not a document'}
+  - {url: 'https://help.knotch.com/sitemap.xml', status: 200, note: '235 URLs, no skills or AGENTS.md'}

@@ -1,0 +1,117 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/knotch-events-api-openapi.yml
+enriched_from:
+- https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+- https://help.knotch.com/en/collections/13-security
+note: >-
+  Standards conformance derived from the published OpenAPI and Knotch's own documentation. Knotch
+  publishes no certifications, no trust center and no compliance program page, so no `Compliance`
+  pointer is wired in apis.yml — see the compliance section below for what was checked.
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: >-
+    https://events.knotch.it/openapi.json declares openapi 3.1.0 and parses with paths and
+    components.schemas.
+- id: json-schema-2020-12
+  conforms: true
+  evidence: >-
+    Schemas use OpenAPI 3.1 / JSON Schema 2020-12 idioms (anyOf with type null for nullables,
+    $ref siblings).
+- id: http-bearer-rfc6750
+  conforms: true
+  evidence: 'securitySchemes.HTTPBearer type http scheme bearer; docs specify Authorization: Bearer <api-key>'
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme in the spec and no OAuth flow documented.
+- id: oidc
+  conforms: false
+  evidence: >-
+    No OpenID Connect discovery document on any Knotch host; /.well-known/openid-configuration
+    404s. SSO into the Knotch One product exists but its protocol is not documented.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are returned as application/json with FastAPI's HTTPValidationError envelope, not
+    application/problem+json, and no type URIs are published.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on knotch.com, knotch.it and events.knotch.it.
+- id: rfc8615-well-known
+  conforms: false
+  evidence: >-
+    No /.well-known/ document is served on any host. docs.knotch.it answers 200 with an HTML
+    shell for every /.well-known/ path, which is an SPA catch-all rather than a served document.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No deprecation policy and no Sunset or Deprecation header support is documented.
+- id: idempotency-key-header
+  conforms: false
+  partial: true
+  evidence: >-
+    No Idempotency-Key header. Knotch instead requires a client-supplied event_id per event and
+    returns 409 Conflict on a duplicate, which delivers safe retries at the event level but is
+    not the header-based convention.
+  see: conventions/knotch-conventions.yml
+- id: pagination
+  conforms: false
+  not_applicable: true
+  evidence: Write-only ingestion API; no collection read operations exist.
+- id: rate-limit-headers
+  conforms: false
+  evidence: No RateLimit-* or X-RateLimit-* headers and no 429 are documented.
+- id: json-api
+  conforms: false
+  evidence: Plain JSON envelope, not JSON:API.
+- id: asyncapi
+  conforms: false
+  not_applicable: true
+  evidence: >-
+    Knotch receives events; it does not publish an outbound event or webhook surface, so there is
+    no event contract to describe with AsyncAPI.
+- id: mcp
+  conforms: false
+  evidence: No MCP server is published; see mcp/knotch-mcp.yml.
+- id: a2a
+  conforms: false
+  evidence: >-
+    No agent card at /.well-known/agent-card.json or /.well-known/agent.json on any Knotch host.
+- id: webhooks-inbound
+  conforms: true
+  evidence: >-
+    Knotch operates a Segment webhook destination endpoint
+    (POST /conversion_events/segment/{account_id}) with Bearer auth and X-Signature HMAC
+    validation over the first event in each batch. This is an inbound receiver, not an outbound
+    webhook surface, so no `Webhooks` pointer is wired.
+compliance:
+  certifications_published: []
+  trust_center: null
+  checked:
+  - {url: 'https://trust.knotch.com/', status: 000, note: DNS does not resolve}
+  - {url: 'https://security.knotch.com/', status: 000, note: DNS does not resolve}
+  - {url: 'https://knotch.com/security', status: 404}
+  - {url: 'https://knotch.com/trust', status: 404}
+  - {url: 'https://knotch.com/legal/gdpr', status: 404}
+  - {url: 'https://knotch.com/legal/dpa', status: 404}
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or CSA STAR claim is published anywhere on
+    Knotch's public surface. The nearest thing to a compliance posture is the help centre Security
+    collection, which documents what data is collected, whether it can be tied to an individual,
+    the retention policy and how SSO access works — useful, but it is a set of FAQ answers, not a
+    compliance program.
+  security_collection: https://help.knotch.com/en/collections/13-security
+privacy_posture:
+  pii_collection: >-
+    Knotch states it does not collect personally identifiable information, form field entries, or
+    transaction data.
+  collected: [page views, scroll depth, time on page, device type and browser via user agent, referring source, conversion and click events, survey responses, element interaction data]
+  source: https://help.knotch.com/en/articles/50-what-data-does-knotch-collect
+  consent: >-
+    Visitors are opted in by default except in EU countries, where opt-out defaults to true.
+    Publisher-controlled opt-out via Knotch.setOptout() or a knotch_optout cookie.
+  source_consent: https://docs.knotch.it/unit_optout/
+  cross_domain_tracking: >-
+    Knotch states the Verification Pixel uses first-party cookies only and that identifiers are
+    not shared with the Measurement product, so it cannot track visitors across domains.
+  privacy_policy: https://knotch.com/legal/privacy-policy

@@ -1,0 +1,111 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/knotch-events-api-openapi.yml
+enriched_from: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+note: >-
+  Entity graph derived from the components.schemas $ref links in the live OpenAPI 3.1.0 at
+  https://events.knotch.it/openapi.json, with field semantics filled in from Knotch's own field
+  definition table. This is an ingestion contract, not a resource model: there are no server-side
+  resource identifiers, no read operations, and therefore no retrievable entities — every entity
+  below is a request-body structure the client composes.
+root: CustomEvents
+entities:
+- name: CustomEvents
+  role: request envelope
+  description: The batch wrapper posted to the conversion events endpoint.
+  fields:
+  - {name: events, type: array<CustomEvent>, required: true, constraint: '1-100 items'}
+- name: CustomEvent
+  role: event record
+  description: One conversion or engagement event.
+  fields:
+  - {name: event, type: EventData, required: true}
+  - {name: identity, type: Identity, required: true}
+  - {name: value, type: Value, required: false}
+  - {name: event_source, type: array<string>, required: false, example: '[Salesforce, Marketo]'}
+  - {name: click_ids, type: ClickIds, required: false}
+- name: EventData
+  role: event descriptor
+  fields:
+  - {name: event_name, type: string, required: true, note: 'must match a saved Event Builder definition, e.g. ClosedWon, BecameSQL, AdClick'}
+  - {name: timestamp, type: integer, required: true, note: UTC Unix epoch seconds}
+  - {name: event_id, type: string, required: true, note: 'unique identifier for the event; the deduplication key'}
+- name: Identity
+  role: identity resolution keys
+  description: >-
+    The identifiers Knotch resolves an inbound event against. Every field is optional in the
+    schema, but the documentation requires at least one to be populated. Knotch also notes that
+    only a single custom ID is currently supported and it must be the ID agreed at integration time.
+  fields:
+  - {name: kn_cs_visitor_id, type: string, required: false, note: Knotch visitor identifier}
+  - {name: gclid, type: Gclid, required: false, note: Google Click ID, with first/last seen}
+  - {name: ecid, type: string, required: false, note: Adobe Experience Cloud ID}
+  - {name: ga_client_id, type: string, required: false, note: Google Analytics client ID}
+  - {name: marketo_lead_id, type: string, required: false, note: Marketo lead ID}
+- name: Gclid
+  role: click identifier with observation window
+  fields:
+  - {name: value, type: string|null}
+  - {name: first_seen, type: integer|null, note: UTC Unix epoch seconds}
+  - {name: last_seen, type: integer|null, note: UTC Unix epoch seconds}
+- name: ClickIds
+  role: paid-media click identifier bundle
+  fields:
+  - {name: msclkid, type: ClickId|null, note: Microsoft Advertising}
+  - {name: fbclid, type: ClickId|null, note: Meta}
+  - {name: ttclid, type: ClickId|null, note: TikTok}
+  - {name: li_fat_id, type: ClickId|null, note: LinkedIn}
+- name: ClickId
+  role: single click identifier
+  fields:
+  - {name: value, type: string, required: true}
+- name: Value
+  role: monetary or numeric outcome
+  fields:
+  - {name: value, type: number|null, note: 'revenue or numeric value; aggregated with sum, currency assumed USD'}
+- name: HTTPValidationError
+  role: error envelope
+  fields:
+  - {name: detail, type: array<ValidationError>}
+- name: ValidationError
+  role: field-level validation failure
+  fields:
+  - {name: loc, type: 'array<string|integer>', required: true, note: JSON path to the offending field}
+  - {name: msg, type: string, required: true}
+  - {name: type, type: string, required: true}
+  - {name: input, type: any}
+  - {name: ctx, type: object}
+relationships:
+- {from: CustomEvents, to: CustomEvent, kind: has_many, via: events}
+- {from: CustomEvent, to: EventData, kind: has_one, via: event}
+- {from: CustomEvent, to: Identity, kind: has_one, via: identity}
+- {from: CustomEvent, to: Value, kind: has_one, via: value, optional: true}
+- {from: CustomEvent, to: ClickIds, kind: has_one, via: click_ids, optional: true}
+- {from: Identity, to: Gclid, kind: has_one, via: gclid, optional: true}
+- {from: ClickIds, to: ClickId, kind: has_one, via: msclkid, optional: true}
+- {from: ClickIds, to: ClickId, kind: has_one, via: fbclid, optional: true}
+- {from: ClickIds, to: ClickId, kind: has_one, via: ttclid, optional: true}
+- {from: ClickIds, to: ClickId, kind: has_one, via: li_fat_id, optional: true}
+- {from: HTTPValidationError, to: ValidationError, kind: has_many, via: detail}
+path_parameters:
+- {name: account_id, type: string, note: 'Knotch Measurement Account ID; scopes the event to a tenant'}
+identifier_conventions:
+  event_id: client-supplied, opaque string, example documented as an opportunity id (OPP-12345)
+  account_id: >-
+    Knotch's published examples show two different shapes for the same concept — a 24-character
+    hex string in the Event Pixel documentation (56045b7062ec9c4e0a2b7443) and a UUID-shaped
+    string in the Events API cURL example. Knotch does not document which form is canonical.
+downstream_concepts:
+  note: >-
+    These are not API entities but are how ingested events surface in the Knotch One product, per
+    the Event Builder documentation.
+  concepts:
+  - {name: API Conversion, detail: 'an Event Builder definition bound to one ingested event_name; appears alongside Site Conversions'}
+  - {name: Site Conversion, detail: on-site conversion captured by the Knotch tag}
+  - {name: Action, detail: on-site interaction event}
+gaps:
+- No read, list, update or delete operations exist, so the model cannot be traversed from the API.
+- The documented payload example shows a "test_event_code" field that is absent from the
+  published schema; the schema conversely defines click_ids, which the documented example omits.
+- The documented example passes identity.gclid both as an object and, in the cURL example, as a
+  bare string; the schema requires the object form.

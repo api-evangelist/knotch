@@ -1,0 +1,55 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: openapi/knotch-events-api-openapi.yml
+note: >-
+  Knotch publishes NO MCP server. This file is a derived candidate tool list, computed from the
+  operations in Knotch's published OpenAPI, and exists so the gap is recorded rather than assumed.
+  No MCPServer pointer is wired in apis.yml and no endpoint URL is invented — an unpublished
+  server must not read as an agent surface.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+search_evidence:
+- {source: 'npm search text=knotch', result: '0 results'}
+- {source: 'npm registry @knotch/mcp, knotch-mcp', result: 404}
+- {source: 'https://docs.knotch.it/', result: 'no MCP mention; documents Unit API, Event Pixel, Verification Pixel only'}
+- {source: 'https://help.knotch.com/sitemap.xml (235 URLs)', result: 'no MCP article'}
+- {source: 'https://events.knotch.it/.well-known/oauth-authorization-server', result: 404}
+- {source: 'https://events.knotch.it/.well-known/oauth-protected-resource', result: 404}
+- {source: 'GitHub orgs knotch / knotchit / knotch-it', result: 404}
+server: null
+tools:
+- name: send_conversion_events
+  description: >-
+    Submit a batch of up to 100 conversion events to a Knotch account for measurement and
+    attribution in Knotch One.
+  source_operation: openapi/knotch-events-api-openapi.yml#get_events_conversion_events_segment__account_id__post
+  input_schema_source: openapi/knotch-events-api-openapi.yml#/components/schemas/CustomEvents
+  write: true
+  consequence: >-
+    Writes measurement data into a customer account. Should be gated: simulate=true validates
+    without storing.
+- name: validate_conversion_events
+  description: >-
+    Validate a batch payload's structure, required fields and authentication without storing any
+    data (the same operation with simulate=true).
+  source_operation: openapi/knotch-events-api-openapi.yml#get_events_conversion_events_segment__account_id__post
+  write: false
+- name: check_health
+  description: Unauthenticated liveness check against the Knotch Events API host.
+  source_operation: openapi/knotch-events-api-openapi.yml#health_check_health_get
+  write: false
+coverage:
+  rest_operations_in_spec: 2
+  candidate_tools: 3
+  published_tools: 0
+gaps:
+- No hosted or remote MCP server.
+- No stdio MCP package on npm or PyPI.
+- Only one write operation exists in the published contract, so an MCP server over this API would
+  be a narrow ingestion tool rather than a read/query surface.

@@ -1,0 +1,61 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+limit_count: 1
+note: >-
+  Knotch publishes exactly one quantitative constraint on the Events API — a batch size cap — and
+  no request-rate limit at all. No rate-limit response headers, no 429, and no quota are
+  documented on any Knotch surface. Recorded as searched with an honest near-zero rather than
+  omitted, because the absence is the finding.
+limits:
+- scope: per-request
+  resource: POST /conversion_events/{account_id} and /conversion_events/segment/{account_id}
+  limit: 100
+  unit: events per request
+  window: null
+  burst: null
+  enforcement: validation failure
+  documented_as: >-
+    "Each request includes an 'events' array (up to 100 events per batch)." and "Maximum 100
+    events per request. ... Requires at least 1 event."
+  minimum: 1
+  source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+response_headers:
+  published: false
+  checked:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  - RateLimit
+  - RateLimit-Policy
+  - Retry-After
+  note: >-
+    None of these are documented, and none appear in the published OpenAPI. An agent has no
+    runtime signal to pace itself against.
+exhaustion:
+  status_code: null
+  note: >-
+    No 429 Too Many Requests is documented in Knotch's response-code table (200, 400, 403, 422,
+    500, 502, 503, 504) or in the OpenAPI. A client cannot distinguish throttling from a generic
+    server error.
+retry_guidance:
+  published: partial
+  detail: >-
+    Knotch documents retry behaviour only for the Segment path — "Segment retries failed posts
+    with exponential backoff" — describing what Segment does, not what Knotch requires. No retry
+    or backoff guidance is published for direct API callers. Retries are nonetheless safe because
+    of the event_id deduplication contract (duplicates return 409).
+  see: conventions/knotch-conventions.yml
+other_surfaces:
+  event_pixel:
+    host: https://t.knotch.it
+    limits_published: false
+    note: >-
+      The Event Pixel documentation states the event string "must consist of at least one
+      character and has no limit" and publishes no request-rate limit.
+  unit_api:
+    limits_published: false
+gaps:
+- No per-key, per-account or per-endpoint request rate limit is published.
+- No rate-limit response headers and no 429 status.
+- No quota, no plan-tiered limits (no plans are published at all — see plans/knotch-plans-pricing.yml).

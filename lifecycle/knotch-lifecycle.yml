@@ -1,0 +1,80 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+note: >-
+  Knotch's operational transparency is thin. The API is versioned only in the title of a help
+  centre article; there is no status page, no changelog, no deprecation policy, no Sunset header
+  support and no published SLA. The one lifecycle commitment Knotch does publish is a data
+  retention policy for customer data.
+versioning:
+  scheme: documentation-title
+  current: v1.1
+  in_url: false
+  in_header: false
+  in_query: false
+  docs: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  detail: >-
+    The endpoint path carries no version segment. The version lives in the article title
+    ("Events API v1.1 Technical Overview") and in the article slug. The predecessor slug
+    (…-events-api-v10-technical-overview) 307-redirects to the v1.1 article, which is the only
+    observable trace of the version change and leaves no record of what changed between them.
+  spec_version_disagreement: >-
+    The published OpenAPI reports info.version "0.1.0", which does not match the documented v1.1.
+    A consumer reading the machine-readable contract gets a different version than one reading
+    the docs.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  notice_period: null
+  note: No deprecation or end-of-life policy is published for any Knotch API surface.
+status_page:
+  url: null
+  published: false
+  evidence:
+  - {url: 'https://status.knotch.com/', status: 000, note: DNS does not resolve}
+  - {url: 'https://status.knotch.it/', status: 000, note: DNS does not resolve}
+  - {url: 'https://knotch.com/status', status: 404}
+  health_endpoint:
+    url: https://events.knotch.it/health
+    operation: health_check_health_get
+    auth: none
+    note: >-
+      An unauthenticated liveness endpoint exists on the API host, but it is a per-request probe,
+      not a status page: no incident history, no component status, no subscription.
+changelog:
+  url: null
+  published: false
+  note: >-
+    No dated changelog or release notes exist on knotch.com, docs.knotch.it or help.knotch.com.
+    The help centre articles carry no published or updated dates.
+sla:
+  url: null
+  uptime_target: null
+  published: false
+data_retention:
+  published: true
+  url: https://help.knotch.com/en/articles/53-what-is-knotch-s-data-retention-policy
+  policy: >-
+    Data is preserved indefinitely during an active customer relationship. If an account is
+    voluntarily closed it enters an expired state, and data from expired accounts is retained
+    until the contract end date, after which it is destroyed upon request or at Knotch's discretion.
+  soft_delete: >-
+    Deleting an API Conversion is a soft delete: events disappear from dashboards and tables
+    within about an hour, but the raw event data ingested through the Events API remains stored in
+    the account and the conversion can be re-created without re-sending events.
+  soft_delete_source: https://help.knotch.com/en/articles/161-creating-and-managing-api-conversion-events
+data_freshness:
+  note: >-
+    Attributed content metrics on the Conversions Leaderboard refresh every 24 hours; ingestion
+    itself is synchronous.
+  source: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+deprecated_operations: []
+gaps:
+- No status page, so consumers have no incident channel.
+- No changelog, so a breaking change to the ingestion contract would be unannounced.
+- No deprecation policy and no Sunset/Deprecation header support.
+- No published SLA or uptime target.
+- The version in the OpenAPI disagrees with the version in the documentation.
