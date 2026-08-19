@@ -46,7 +46,7 @@ x-tier-reason: >-
   Upgraded from stub 2026-08-13: a live OpenAPI 3.1.0 was found at https://events.knotch.it/openapi.json
   and two public documentation hosts (docs.knotch.it, help.knotch.com) were harvested. The prior
   "no-public-api-surface" finding was wrong.
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-08-13'
 tags:
