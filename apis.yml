@@ -75,6 +75,10 @@ apis:
   humanURL: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
   baseURL: https://events.knotch.it
   tags:
+  - Event
+  - Conversions
+  - Attribution
+  tags_raw:
   - Events
   - Conversions
   - Attribution
@@ -112,6 +116,10 @@ apis:
   baseURL: https://www.knotch-cdn.com
   tags:
   - JavaScript
+  - Measurements
+  - Consent
+  tags_raw:
+  - JavaScript
   - Measurement
   - Consent
   properties:
@@ -129,6 +137,10 @@ apis:
   humanURL: https://docs.knotch.it/event_pixel/
   baseURL: https://t.knotch.it
   tags:
+  - Pixel
+  - Event
+  - Conversion Tracking
+  tags_raw:
   - Pixel
   - Events
   - Conversion Tracking
