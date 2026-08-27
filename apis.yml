@@ -66,12 +66,12 @@ apis:
 - aid: knotch:events-api
   name: Knotch Events API
   description: >-
-    Server-side conversion event ingestion. Accepts batches of up to 100 events over HTTPS with
-    Bearer authentication, so conversions that happen off-site (CRM milestones such as ClosedWon,
-    BecameSQL or Renewal, data-warehouse or marketing-automation outcomes) can be measured and
-    attributed alongside on-site conversions in Knotch One, where they surface as "API Conversions".
-    A simulate=true query parameter validates a payload without storing data. A Segment Webhook
-    destination endpoint is also supported and is the only path present in the published OpenAPI.
+    Server-side conversion event ingestion. Accepts batches of up to 100 events over HTTPS with Bearer
+    authentication, so conversions that happen off-site (CRM milestones such as ClosedWon, BecameSQL or
+    Renewal, data-warehouse or marketing-automation outcomes) can be measured and attributed alongside
+    on-site conversions in Knotch One, where they surface as "API Conversions". A simulate=true query
+    parameter validates a payload without storing data. A Segment Webhook destination endpoint is also
+    supported and is the only path present in the published OpenAPI.
   humanURL: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
   baseURL: https://events.knotch.it
   tags:
@@ -108,10 +108,10 @@ apis:
 - aid: knotch:unit-api
   name: Knotch Measurement Unit API
   description: >-
-    Browser-side JavaScript API exposed by the Knotch tag for controlling Measurement Units on a
-    page at runtime: Knotch.addUnit(), Knotch.removeUnit(), Knotch.setFocus(), Knotch.enableUnit(),
-    Knotch.disableUnit() and Knotch.setOptout(). Paired with the knotch-ignore HTML attribute, which
-    holds a placeholder container back from injecting a Unit until the publisher explicitly enables it.
+    Browser-side JavaScript API exposed by the Knotch tag for controlling Measurement Units on a page
+    at runtime: Knotch.addUnit(), Knotch.removeUnit(), Knotch.setFocus(), Knotch.enableUnit(), Knotch.disableUnit()
+    and Knotch.setOptout(). Paired with the knotch-ignore HTML attribute, which holds a placeholder container
+    back from injecting a Unit until the publisher explicitly enables it.
   humanURL: https://docs.knotch.it/unit_api/
   baseURL: https://www.knotch-cdn.com
   tags:
@@ -130,10 +130,10 @@ apis:
 - aid: knotch:event-pixel
   name: Knotch Event Pixel
   description: >-
-    HTTP beacon endpoint for signalling arbitrary events from a web page — conversion events, site
-    journey steps and visitor signals. A single GET to the collection host with account_id, event
-    and optional page_url and ts query parameters, implementable as an inline <img>, a dynamic
-    Image() in JavaScript, or an event-delegated handler.
+    HTTP beacon endpoint for signalling arbitrary events from a web page — conversion events, site journey
+    steps and visitor signals. A single GET to the collection host with account_id, event and optional
+    page_url and ts query parameters, implementable as an inline <img>, a dynamic Image() in JavaScript,
+    or an event-delegated handler.
   humanURL: https://docs.knotch.it/event_pixel/
   baseURL: https://t.knotch.it
   tags:
@@ -150,10 +150,10 @@ apis:
 - aid: knotch:verification-pixel
   name: Knotch Verification Pixel
   description: >-
-    Publisher traffic verification tag, a component of Knotch Blueprint. A single script element
-    carrying a data-kvpid attribute, fired once on document onLoad, collecting page views, unique
-    visitors and basic browser metrics. Identifiers are first-party cookies and are explicitly not
-    shared with the Knotch Measurement product.
+    Publisher traffic verification tag, a component of Knotch Blueprint. A single script element carrying
+    a data-kvpid attribute, fired once on document onLoad, collecting page views, unique visitors and
+    basic browser metrics. Identifiers are first-party cookies and are explicitly not shared with the
+    Knotch Measurement product.
   humanURL: https://docs.knotch.it/verification_pixel/
   baseURL: https://www.knotch-cdn.com
   tags:
@@ -165,6 +165,16 @@ apis:
     url: https://docs.knotch.it/verification_pixel/
   - type: Components
     url: components/knotch-components.yml
+- aid: knotch:knotch-health-api
+  name: Knotch Health API
+  description: The Health API from Knotch — 1 operation(s) for health.
+  humanURL: https://help.knotch.com/en/articles/159-events-api-v11-technical-overview
+  baseURL: https://events.knotch.it
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/knotch-health-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
