@@ -1,0 +1,29 @@
+openapi: 3.2.0
+info:
+  title: Knotch Events Health API
+  description: Knotch Events API — send server-side conversion events from CRMs, data warehouses, or analytics tools directly into Knotch, where they are measured and attributed alongside Site Conversions in Knotch One. Harvested verbatim from https://events.knotch.it/openapi.json (published there as 'Custom Events API'). servers[] added by API Evangelist from the host the spec was served from, which is also the host Knotch's own Events API documentation names as the base URL.
+  version: 0.1.0
+servers:
+- url: https://events.knotch.it
+  description: Knotch Events API production host
+tags:
+- name: Health
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Health check endpoint.
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer
