@@ -88,7 +88,7 @@ apis:
   baseURL: https://events.knotch.it
   tags:
   - Event
-  - Conversions
+  - Conversion
   - Attribution
   tags_raw:
   - Events
