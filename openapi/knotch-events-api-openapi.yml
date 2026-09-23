@@ -1,17 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Knotch Events API
-  description: Knotch Events API — send server-side conversion events from CRMs, data warehouses, or analytics
-    tools directly into Knotch, where they are measured and attributed alongside Site Conversions in Knotch
-    One. Harvested verbatim from https://events.knotch.it/openapi.json (published there as 'Custom Events
-    API'). servers[] added by API Evangelist from the host the spec was served from, which is also the
-    host Knotch's own Events API documentation names as the base URL.
+  title: Custom Events API
+  description: A FastAPI service for handling custom events
   version: 0.1.0
+tags:
+- name: Events
 paths:
   /conversion_events/segment/{account_id}:
     post:
       tags:
-      - events
+      - Events
       summary: Get Events
       operationId: get_events_conversion_events_segment__account_id__post
       security:
@@ -48,74 +46,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /health:
-    get:
-      summary: Health Check
-      description: Health check endpoint.
-      operationId: health_check_health_get
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema: {}
 components:
   schemas:
-    ClickId:
+    HTTPValidationError:
       properties:
-        value:
-          type: string
-          title: Value
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - value
-      title: ClickId
-    ClickIds:
-      properties:
-        msclkid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        fbclid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        ttclid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        li_fat_id:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-      type: object
-      title: ClickIds
-    CustomEvent:
-      properties:
-        event:
-          $ref: '#/components/schemas/EventData'
-        identity:
-          $ref: '#/components/schemas/Identity'
-        value:
-          anyOf:
-          - $ref: '#/components/schemas/Value'
-          - type: 'null'
-        event_source:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Event Source
-        click_ids:
-          anyOf:
-          - $ref: '#/components/schemas/ClickIds'
-          - type: 'null'
-      type: object
-      required:
-      - event
-      - identity
-      title: CustomEvent
+      title: HTTPValidationError
     CustomEvents:
       properties:
         events:
@@ -127,51 +68,6 @@ components:
       required:
       - events
       title: CustomEvents
-    EventData:
-      properties:
-        event_name:
-          type: string
-          title: Event Name
-        timestamp:
-          type: integer
-          title: Timestamp
-        event_id:
-          type: string
-          title: Event Id
-      type: object
-      required:
-      - event_name
-      - timestamp
-      - event_id
-      title: EventData
-    Gclid:
-      properties:
-        value:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Value
-        first_seen:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: First Seen
-        last_seen:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Last Seen
-      type: object
-      title: Gclid
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     Identity:
       properties:
         kn_cs_visitor_id:
@@ -200,6 +96,71 @@ components:
           title: Marketo Lead Id
       type: object
       title: Identity
+    Gclid:
+      properties:
+        value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Value
+        first_seen:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: First Seen
+        last_seen:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Last Seen
+      type: object
+      title: Gclid
+    EventData:
+      properties:
+        event_name:
+          type: string
+          title: Event Name
+        timestamp:
+          type: integer
+          title: Timestamp
+        event_id:
+          type: string
+          title: Event Id
+      type: object
+      required:
+      - event_name
+      - timestamp
+      - event_id
+      title: EventData
+    Value:
+      properties:
+        value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value
+      type: object
+      title: Value
+    ClickIds:
+      properties:
+        msclkid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        fbclid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        ttclid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        li_fat_id:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+      type: object
+      title: ClickIds
     ValidationError:
       properties:
         loc:
@@ -226,19 +187,42 @@ components:
       - msg
       - type
       title: ValidationError
-    Value:
+    ClickId:
       properties:
         value:
-          anyOf:
-          - type: number
-          - type: 'null'
+          type: string
           title: Value
       type: object
-      title: Value
+      required:
+      - value
+      title: ClickId
+    CustomEvent:
+      properties:
+        event:
+          $ref: '#/components/schemas/EventData'
+        identity:
+          $ref: '#/components/schemas/Identity'
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/Value'
+          - type: 'null'
+        event_source:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Event Source
+        click_ids:
+          anyOf:
+          - $ref: '#/components/schemas/ClickIds'
+          - type: 'null'
+      type: object
+      required:
+      - event
+      - identity
+      title: CustomEvent
   securitySchemes:
     HTTPBearer:
       type: http
       scheme: bearer
-servers:
-- url: https://events.knotch.it
-  description: Knotch Events API production host
