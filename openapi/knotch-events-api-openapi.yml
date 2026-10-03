@@ -48,23 +48,98 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    EventData:
+    ClickId:
       properties:
-        event_name:
+        value:
           type: string
-          title: Event Name
-        timestamp:
-          type: integer
-          title: Timestamp
-        event_id:
-          type: string
-          title: Event Id
+          title: Value
       type: object
       required:
-      - event_name
-      - timestamp
-      - event_id
-      title: EventData
+      - value
+      title: ClickId
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ClickIds:
+      properties:
+        msclkid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        fbclid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        ttclid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        li_fat_id:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+      type: object
+      title: ClickIds
+    Identity:
+      properties:
+        kn_cs_visitor_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Kn Cs Visitor Id
+        gclid:
+          anyOf:
+          - $ref: '#/components/schemas/Gclid'
+          - type: 'null'
+        ecid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ecid
+        ga_client_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ga Client Id
+        marketo_lead_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Marketo Lead Id
+      type: object
+      title: Identity
     CustomEvent:
       properties:
         event:
@@ -91,15 +166,6 @@ components:
       - event
       - identity
       title: CustomEvent
-    Value:
-      properties:
-        value:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Value
-      type: object
-      title: Value
     Gclid:
       properties:
         value:
@@ -130,98 +196,32 @@ components:
       required:
       - events
       title: CustomEvents
-    ClickId:
+    EventData:
+      properties:
+        event_name:
+          type: string
+          title: Event Name
+        timestamp:
+          type: integer
+          title: Timestamp
+        event_id:
+          type: string
+          title: Event Id
+      type: object
+      required:
+      - event_name
+      - timestamp
+      - event_id
+      title: EventData
+    Value:
       properties:
         value:
-          type: string
+          anyOf:
+          - type: number
+          - type: 'null'
           title: Value
       type: object
-      required:
-      - value
-      title: ClickId
-    ClickIds:
-      properties:
-        msclkid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        fbclid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        ttclid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        li_fat_id:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-      type: object
-      title: ClickIds
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    Identity:
-      properties:
-        kn_cs_visitor_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Kn Cs Visitor Id
-        gclid:
-          anyOf:
-          - $ref: '#/components/schemas/Gclid'
-          - type: 'null'
-        ecid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ecid
-        ga_client_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ga Client Id
-        marketo_lead_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Marketo Lead Id
-      type: object
-      title: Identity
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: Value
   securitySchemes:
     HTTPBearer:
       type: http
