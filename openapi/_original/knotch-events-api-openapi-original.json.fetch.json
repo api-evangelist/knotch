@@ -1,0 +1,12 @@
+{
+ "url": "https://events.knotch.it/openapi.json",
+ "requested_url": "https://events.knotch.it/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 4203,
+ "sha256": "0ab097a8a9d3b154544143efe88eda9410d514b16e8072f653eaad7f5ba542a3",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
