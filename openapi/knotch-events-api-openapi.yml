@@ -48,60 +48,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    EventData:
-      properties:
-        event_name:
-          type: string
-          title: Event Name
-        timestamp:
-          type: integer
-          title: Timestamp
-        event_id:
-          type: string
-          title: Event Id
-      type: object
-      required:
-      - event_name
-      - timestamp
-      - event_id
-      title: EventData
-    Value:
-      properties:
-        value:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Value
-      type: object
-      title: Value
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    Gclid:
-      properties:
-        value:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Value
-        first_seen:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: First Seen
-        last_seen:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Last Seen
-      type: object
-      title: Gclid
     ValidationError:
       properties:
         loc:
@@ -128,72 +74,6 @@ components:
       - msg
       - type
       title: ValidationError
-    CustomEvents:
-      properties:
-        events:
-          items:
-            $ref: '#/components/schemas/CustomEvent'
-          type: array
-          title: Events
-      type: object
-      required:
-      - events
-      title: CustomEvents
-    CustomEvent:
-      properties:
-        event:
-          $ref: '#/components/schemas/EventData'
-        identity:
-          $ref: '#/components/schemas/Identity'
-        value:
-          anyOf:
-          - $ref: '#/components/schemas/Value'
-          - type: 'null'
-        event_source:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Event Source
-        click_ids:
-          anyOf:
-          - $ref: '#/components/schemas/ClickIds'
-          - type: 'null'
-      type: object
-      required:
-      - event
-      - identity
-      title: CustomEvent
-    ClickIds:
-      properties:
-        msclkid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        fbclid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        ttclid:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-        li_fat_id:
-          anyOf:
-          - $ref: '#/components/schemas/ClickId'
-          - type: 'null'
-      type: object
-      title: ClickIds
-    ClickId:
-      properties:
-        value:
-          type: string
-          title: Value
-      type: object
-      required:
-      - value
-      title: ClickId
     Identity:
       properties:
         kn_cs_visitor_id:
@@ -222,6 +102,126 @@ components:
           title: Marketo Lead Id
       type: object
       title: Identity
+    Gclid:
+      properties:
+        value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Value
+        first_seen:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: First Seen
+        last_seen:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Last Seen
+      type: object
+      title: Gclid
+    Value:
+      properties:
+        value:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Value
+      type: object
+      title: Value
+    ClickId:
+      properties:
+        value:
+          type: string
+          title: Value
+      type: object
+      required:
+      - value
+      title: ClickId
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ClickIds:
+      properties:
+        msclkid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        fbclid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        ttclid:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+        li_fat_id:
+          anyOf:
+          - $ref: '#/components/schemas/ClickId'
+          - type: 'null'
+      type: object
+      title: ClickIds
+    EventData:
+      properties:
+        event_name:
+          type: string
+          title: Event Name
+        timestamp:
+          type: integer
+          title: Timestamp
+        event_id:
+          type: string
+          title: Event Id
+      type: object
+      required:
+      - event_name
+      - timestamp
+      - event_id
+      title: EventData
+    CustomEvent:
+      properties:
+        event:
+          $ref: '#/components/schemas/EventData'
+        identity:
+          $ref: '#/components/schemas/Identity'
+        value:
+          anyOf:
+          - $ref: '#/components/schemas/Value'
+          - type: 'null'
+        event_source:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Event Source
+        click_ids:
+          anyOf:
+          - $ref: '#/components/schemas/ClickIds'
+          - type: 'null'
+      type: object
+      required:
+      - event
+      - identity
+      title: CustomEvent
+    CustomEvents:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/CustomEvent'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: CustomEvents
   securitySchemes:
     HTTPBearer:
       type: http
