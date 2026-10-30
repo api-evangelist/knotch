@@ -64,12 +64,117 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Knotch is a New York-based content intelligence company founded by Anda Gansca and Aron Tzimas. Its Knotch One platform measures and optimizes owned-content performance for enterprise marketing teams, and its newer product, Ace, is positioned as AI experience infrastructure for the conversational web — ingesting a brand's existing web properties and atomizing them into modular content units, then composing adaptive page experiences for human visitors while emitting structured, citable content for AI agents and answer engines.
+Knotch is a New York-based content intelligence company founded by Anda Gansca and Aron Tzimas. Its Knotch One platform measures and optimizes owned-content performance for enterprise marketing teams, and its newer product, Ace, is positioned as AI experience infrastructure for the conversational web: it ingests a brand's existing web properties, content hubs, video and feeds, atomizes them into modular content units tagged by topic, audience, funnel stage and intent, then composes adaptive page experiences for human visitors while emitting structured, citable content for AI agents and answer engines. Named enterprise customers include Google, Deloitte, Ally, Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX and Chime. Knotch does publish a developer surface, on two hosts that are not linked from the marketing site: docs.knotch.it documents the browser-side Measurement Unit API, Event Pixel and Verification Pixel, and help.knotch.com documents the server-side Knotch Events API v1.1, which accepts batched conversion events over HTTPS with Bearer authentication and is backed by a live OpenAPI 3.1.0 definition served at https://events.knotch.it/openapi.json. Credentials are issued by Client Success rather than self-service, and no pricing, status page, changelog, SDK or public GitHub organization is published.
 
-Named enterprise customers include Google, Deloitte, Ally, Zillow, Cox Automotive, GEICO, Synchrony, Square, Dropbox, FOX and Chime.
+**Areas:** Company · Content Intelligence · Content Marketing · Analytics · Artificial Intelligence · Personalization · Marketing Technology · Agentic Web · Conversion Tracking · Attribution · Event Ingestion · Web Analytics
 
-## API surface
+## Knotch on APIs.io
 
-As of 2026-07-19 Knotch publishes **no public developer surface**: no developer portal, API documentation, OpenAPI/AsyncAPI specification, SDK or package on any public registry, CLI, public GitHub organization, status page, changelog, or `/.well-known/` discovery documents. Access is sales-led. The artifacts in this repo are limited to identity, a domain-security probe, a well-known probe (all 404s, recorded as negative evidence), and a generated `llms.txt`.
+Everything profiled for Knotch is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/knotch/](https://apis.io/providers/knotch/)** — or go straight to one of the APIs or properties below.
 
-Backed by: slow-ventures — https://knotch.com/
+### APIs (5)
+
+- [Knotch Events API](https://apis.io/apis/knotch/events-api/) — Server-side conversion event ingestion. Accepts batches of up to 100 events over HTTPS with Bearer authentication, so conversions that happen off-site (CRM…
+- [Knotch Measurement Unit API](https://apis.io/apis/knotch/unit-api/) — Browser-side JavaScript API exposed by the Knotch tag for controlling Measurement Units on a page at runtime: Knotch.addUnit(), Knotch.removeUnit(),…
+- [Knotch Event Pixel](https://apis.io/apis/knotch/event-pixel/) — HTTP beacon endpoint for signalling arbitrary events from a web page — conversion events, site journey steps and visitor signals. A single GET to the…
+- [Knotch Verification Pixel](https://apis.io/apis/knotch/verification-pixel/) — Publisher traffic verification tag, a component of Knotch Blueprint. A single script element carrying a data-kvpid attribute, fired once on document onLoad,…
+- [Knotch Health API](https://apis.io/apis/knotch/knotch-health-api/) — The Health API from Knotch — 1 operation(s) for health.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [knotch-mcp.yml](https://apis.io/servers/knotch/knotch-mcp-yml/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Knotch Events Api Overlay](https://apis.io/overlays/knotch/knotch-events-api-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Knotch Authentication](https://apis.io/security/knotch/knotch-authentication/)
+- [Knotch Domain Security](https://apis.io/security/knotch/knotch-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Knotch Plans Pricing](https://apis.io/plans/knotch/knotch-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Knotch Rate Limits](https://apis.io/rate-limits/knotch/knotch-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://knotch.com/)
+- [Documentation](https://docs.knotch.it/)
+- [Getting started](https://help.knotch.com/en/collections/1-getting-started)
+- [API reference](https://help.knotch.com/en/articles/159-events-api-v11-technical-overview)
+- [Support](https://help.knotch.com/)
+- [Privacy policy](https://knotch.com/legal/privacy-policy)
+
+## API Evangelist rating
+
+**Kin Score 35.6** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 41.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 21.1 |
+| Developer ergonomics | 63.7 |
+| Access clarity | 10.5 |
+
+**Agent readiness 27.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | yes |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 19.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/knotch/](https://apis.io/providers/knotch/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Knotch: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/knotch/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
